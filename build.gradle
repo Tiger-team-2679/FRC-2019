@@ -1,0 +1,34 @@
+plugins {
+    id "java"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1"
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io"}
+    maven {     url "http://devsite.ctr-electronics.com/maven/release/"}
+}
+
+ext.PhoenixVersion = "5.8.1"
+
+dependencies {
+    implementation 'com.github.Tiger-team-2679:Tiger-Eye:master-SNAPSHOT'
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    compile "com.ctre.phoenix:api-java:${PhoenixVersion}"
+    compile "com.ctre.phoenix:wpiapi-java:${PhoenixVersion}"
+    nativeZip "com.ctre.phoenix:cci:${PhoenixVersion}:linuxathena@zip"
+
+}
+
+def robotManifest = {
+    //attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+    attributes 'Main-Class': 'org.team2679.TigerEye.core.Bootstrap'
+}
+
+jar.doFirst {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest robotManifest
+}
