@@ -12,7 +12,7 @@ repositories {
 ext.PhoenixVersion = "5.8.1"
 
 dependencies {
-    implementation 'com.github.Tiger-team-2679:Tiger-Eye:master-SNAPSHOT'
+    compile 'com.github.Tiger-team-2679:Tiger-Eye:master-SNAPSHOT'
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
