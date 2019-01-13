@@ -1,6 +1,8 @@
 package org.team2679.frc2019;
 
 import org.team2679.TigerEye.core.Setup;
+import org.team2679.TigerEye.core.Tiger;
+import org.team2679.frc2019.subsystems.Grabber;
 
 public class Main extends Setup {
 
@@ -11,6 +13,6 @@ public class Main extends Setup {
 
     @Override
     public void init() {
-        // TODO write code to be executed after HAL is told the robot has started
+        Grabber.INSTANCE.registerSubsystem(Tiger.get_main_notifier_50ms());
     }
 }
