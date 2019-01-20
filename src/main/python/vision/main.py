@@ -18,13 +18,13 @@ return:
 """
 def get_dis_angle(contour,real_width,camera_view_angle,camera_view_width):
     x,y,w,h = cv2.boundingRect(contour)
-	distance_from_image_center = ((camera_view_width/2) - (x + w/2))
-	angle_to_turn = 0
-	distance_from_target = 0
-	if distance_from_image_center != 0:
-		angle_to_turn = camera_view_angle/(camera_view_width/distance_from_image_center)
-		distance_from_target = abs(((distance_from_image_center*real_width)/w)/math.tan(angle_to_turn))
-	return distance_from_target,angle_to_turn
+    distance_from_image_center = ((camera_view_width/2) - (x + w/2))
+    angle_to_turn = 0
+    distance_from_target = 0
+    if distance_from_image_center != 0:
+        angle_to_turn = camera_view_angle/(camera_view_width/distance_from_image_center)
+        distance_from_target = abs(((distance_from_image_center*real_width)/w)/math.tan(angle_to_turn))
+    return distance_from_target,angle_to_turn
 
 """
 a function used to detect the orange ball called as 'Cargo'
