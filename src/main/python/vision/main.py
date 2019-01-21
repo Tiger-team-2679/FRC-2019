@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import math
 
+import vision.process_cargo as process_cargo
+
 """
 a function used to get the distance and angle from a contour
 it uses info about the camera, the attribues of the contour in real world size
@@ -16,6 +18,7 @@ return:
 1) distance from the target
 2) angle from the target
 """
+"""
 def get_dis_angle(contour,real_width,camera_view_angle,camera_view_width):
     x,y,w,h = cv2.boundingRect(contour)
     distance_from_image_center = ((camera_view_width/2) - (x + w/2))
@@ -25,6 +28,8 @@ def get_dis_angle(contour,real_width,camera_view_angle,camera_view_width):
         angle_to_turn = camera_view_angle/(camera_view_width/distance_from_image_center)
         distance_from_target = abs(((distance_from_image_center*real_width)/w)/math.tan(angle_to_turn))
     return distance_from_target,angle_to_turn
+"""
+
 
 """
 a function used to detect the orange ball called as 'Cargo'
@@ -37,24 +42,6 @@ params:
 return: 
 1) the countor found as the cargo 
 """
-def detect_cargo(frame):
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) # turn GBR TO HSV
-    # set lower and upper threshold
-    lower = np.array([3,140,50]) # H, S, V
-    upper = np.array([7,255,255])  # H, S, V
-    # find all pixels in the hsv range
-    frame = cv2.inRange(frame, lower, upper);
-    # use dilate to reduce of noise
-    kernel = np.ones((11,11),np.uint8)
-    frame = cv2.dilate(frame, kernel, iterations = 1)
-    # find all contours
-    im2, contours, hierarchy = cv2.findContours(frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    # find the biggest contour
-    if len(contours) != 0:
-        c = max(contours, key = cv2.contourArea)
-        return c
-    return None
-
 """
 a function used to accept a frame and a countor, then it draws the contour's outline
 and puts a rectangle around it
@@ -65,11 +52,6 @@ params:
 
 return: None
 """
-def draw_contour(frame, contour):
-    x,y,w,h = cv2.boundingRect(contour)
-    cv2.drawContours(frame, [contour], 0, (255,0,0), 2)
-    cv2.rectangle(frame,(x,y),(x+w,y+h), (0,255,0), 2)
-
 def process():
     CAMERA_VIEW_ANGLE = 75
     CARGO_WIDTH = 33 # CM    
@@ -77,10 +59,11 @@ def process():
     while True: # work until break
         ret_val,img = CAMERA.read() # get frame from camera
         if ret_val: # check if frame exists
-            c =  detect_cargo(img) # find the cargo's contour
+            c =  process_cargo.detect_cargo(img) # find the cargo's contour
             if c is not None:
-                angle,distance = get_dis_angle(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
-                draw_contour(img, c) # draw contour
+                distance = process_cargo.get_dis_angle(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
+                print(distance)
+                process_cargo.draw_contour(img, c) # draw contour
                 # TODO send contour to roborio or do something
             cv2.imshow('original', img)
             if cv2.waitKey(1) == 27: 
@@ -89,7 +72,6 @@ def process():
 
 def main():
     process()
-
 
 if __name__ == '__main__':
     main()
