@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 import math
 
-def get_dis_angle(contour,real_width,camera_view_angle,camera_view_width):
-    x,y,w,h = cv2.boundingRect(contour)
-    angle=camera_view_angle/2
-    tribase= real_width*camera_view_width/w/2
-    return tribase / math.tan(math.radians(angle))
+def get_dis_angle(contour, real_width, camera_view_angle, camera_view_width):
+    x, y, w, h = cv2.boundingRect(contour)
+    angle = camera_view_angle / 2
+    tribase = real_width * camera_view_width / w / 2
+    return tribase / math.tan(angle)
 
 def detect_cargo(frame):
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) # turn GBR TO HSV
