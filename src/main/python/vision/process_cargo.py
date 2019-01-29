@@ -21,8 +21,7 @@ def detect_cargo(frame):
     # find all contours
     contours, hierarchy = cv2.findContours(frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     # find the biggest contour
-    max(contours, key = cv2.contourArea, default = None)
-
+    return max(contours, key = cv2.contourArea, default = None)
 
 def draw_contour(frame, contour):
     x,y,w,h = cv2.boundingRect(contour)
