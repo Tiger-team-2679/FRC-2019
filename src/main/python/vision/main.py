@@ -53,7 +53,7 @@ params:
 return: None
 """
 def process():
-    CAMERA_VIEW_ANGLE = 75
+    CAMERA_VIEW_ANGLE = math.radians(75)
     CARGO_WIDTH = 33 # CM    
     CAMERA = cv2.VideoCapture(0)
     while True: # work until break
