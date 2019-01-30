@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import math
 
-import vision.process_cargo as process_cargo
+from process_cargo import *
 
 """
 a function used to get the distance and angle from a contour
@@ -59,11 +59,13 @@ def process():
     while True: # work until break
         ret_val,img = CAMERA.read() # get frame from camera
         if ret_val: # check if frame exists
-            c =  process_cargo.detect_cargo(img) # find the cargo's contour
+            c =  detect_cargo(img) # find the cargo's contour
             if c is not None:
-                distance = process_cargo.get_dis_angle(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
+                distance = get_contour_dis(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
+                angle = get_contour_angle(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1])
                 print(distance)
-                process_cargo.draw_contour(img, c) # draw contour
+                print(math.degrees(angle))
+                draw_contour(img, c) # draw contour
                 # TODO send contour to roborio or do something
             cv2.imshow('original', img)
             if cv2.waitKey(1) == 27: 
