@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/user/Desktop/Workspace/FRC-2019/vision/src/main/cpp/main.cpp
+iostream
+-
+opencv2/opencv.hpp
+-
+opencv2/imgproc.hpp
+C:/Users/user/Desktop/Workspace/FRC-2019/vision/src/main/cpp/opencv2/imgproc.hpp
+opencv2/core.hpp
+C:/Users/user/Desktop/Workspace/FRC-2019/vision/src/main/cpp/opencv2/core.hpp
+opencv2/highgui.hpp
+C:/Users/user/Desktop/Workspace/FRC-2019/vision/src/main/cpp/opencv2/highgui.hpp
+opencv2/opencv.hpp
+C:/Users/user/Desktop/Workspace/FRC-2019/vision/src/main/cpp/opencv2/opencv.hpp
+
