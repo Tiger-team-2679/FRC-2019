@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2019.1.1"
+    id "org.hidetake.ssh" version "2.9.0"
 }
 
 repositories {
@@ -23,6 +24,30 @@ deploy {
             debug = frc.getDebugOrDefault(false)
         }
     }
+}
+
+remotes {
+  jetson {
+    host = '192.168.137.22'
+    user = 'nvidia'
+    password = 'nvidia'
+  }
+}
+
+ssh.settings {
+  fileTransfer = 'scp'
+}
+
+task jetsonDeploy {
+  doLast {
+    ssh.run {
+        session(remotes.jetson) {
+            def root = new File(projectDir, "vision")
+            FileTree myFileTree = fileTree(root.path)
+            put from: myFileTree.getDir(), into: '/home/nvidia/Desktop/frc/'
+        }
+    }
+  }
 }
 
 dependencies {
