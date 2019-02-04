@@ -24,7 +24,7 @@ dependencies {
 }
 
 def robotManifest = {
-    //attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+    //attributes 'Main-Class': 'edu.wpi.first.wpilibj.subproject.RobotBase'
     attributes 'Main-Class': 'org.team2679.TigerEye.core.Bootstrap'
 }
 

@@ -53,7 +53,7 @@ params:
 return: None
 """
 def process():
-    CAMERA_VIEW_ANGLE = math.radians(75)
+    CAMERA_VIEW_ANGLE = math.radians(50)
     CARGO_WIDTH = 33 # CM    
     CAMERA = cv2.VideoCapture(0)
     while True: # work until break
@@ -61,15 +61,18 @@ def process():
         if ret_val: # check if frame exists
             c =  detect_cargo(img) # find the cargo's contour
             if c is not None:
-                distance = get_contour_dis(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
-                angle = get_contour_angle(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1])
+                distance = get_cargo_abs_dis(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
+                x, y, w, h = cv2.boundingRect(c)
+                print (img.shape[0])
+                angle = get_angle_2_points( x , x+ w, CAMERA_VIEW_ANGLE, img.shape[1])
                 print(distance)
-                print(math.degrees(angle))
+                #print(math.degrees(angle))
                 draw_contour(img, c) # draw contour
                 # TODO send contour to roborio or do something
             cv2.imshow('original', img)
-            if cv2.waitKey(1) == 27: 
-                break  # esc to quit
+            while True:
+                if cv2.waitKey(1) == 27: 
+                    break  # esc to quit
     cv2.destroyAllWindows()
 
 def main():

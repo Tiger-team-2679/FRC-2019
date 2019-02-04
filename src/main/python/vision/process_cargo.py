@@ -2,19 +2,25 @@ import cv2
 import numpy as np
 import math
 
+
+
 def get_contour_dis(contour, real_width, camera_view_angle, camera_view_width):
     x, y, w, h = cv2.boundingRect(contour)
     angle = camera_view_angle / 2
     tribase = real_width * camera_view_width / w / 2
     return tribase / math.tan(angle)
-def get_contour_angle(contour, real_width, camera_view_angle, camera_view_width):
-    lp = camera_view_width / 2
-    h_angle = camera_view_angle / 2
-    dp = lp / math.tan(h_angle)
+
+def get_angle_from_center(point , camera_view_angle, camera_view_width):
+    dis_from_screen = (camera_view_width / 2) / math.tan(camera_view_angle / 2)
+    return math.atan((point - camera_view_width / 2) / dis_from_screen)
+
+def get_angle_2_points(point1, point2, camera_view_angle, camera_view_width):
+    return get_angle_from_center(point2, camera_view_angle, camera_view_width) - get_angle_from_center(point1, camera_view_angle, camera_view_width)
+
+def get_cargo_abs_dis(contour, real_width, camera_view_angle, camera_view_width):
     x, y, w, h = cv2.boundingRect(contour)
-    lp_from_con = (w / 2 + x) - camera_view_width / 2
-    print(w / 2 + x, "a", x)
-    return math.atan(lp_from_con / dp)
+    angle = get_angle_2_points(x, x + w, camera_view_angle, camera_view_width) / 2
+    return (real_width / 2) / math.sin(angle)
 
 def detect_all_contours_by_color(frame):
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) # turn GBR TO HSV
@@ -45,4 +51,3 @@ def draw_contour(frame, contour):
     x,y,w,h = cv2.boundingRect(contour)
     cv2.drawContours(frame, [contour], 0, (255,0,0), 2)
     cv2.rectangle(frame,(x,y),(x+w,y+h), (0,255,0), 2)
-
