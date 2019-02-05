@@ -25,6 +25,10 @@ deploy {
     }
 }
 
+repositories { mavenCentral() }
+
+configurations { sshAntTask }
+
 dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
@@ -34,6 +38,7 @@ dependencies {
     compile "com.ctre.phoenix:wpiapi-java:${PhoenixVersion}"
     nativeZip "com.ctre.phoenix:cci:${PhoenixVersion}:linuxathena@zip"
     compile 'com.github.Tiger-team-2679:Tiger-Eye:13.01.2019'
+	sshAntTask 'org.apache.ant:ant-jsch:1.9.2'
 }
 
 def robotManifest = {
@@ -43,4 +48,52 @@ def robotManifest = {
 jar.doFirst {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     manifest robotManifest
+}
+
+task deployJetson() {
+    def host = 'tegra-ubuntu.local'
+	def user = 'nvidia'
+	def password = 'nvidia'
+	def workdir = '/home/nvidia/Desktop/frc/vision'
+	def output = 'sshoutput.txt'
+	
+	ant.taskdef(
+		name: 'scp',
+		classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
+		classpath: configurations.sshAntTask.asPath)
+		
+	ant.taskdef(
+        name: 'ssh',
+        classname: 'org.apache.tools.ant.taskdefs.optional.ssh.SSHExec',
+        classpath: configurations.sshAntTask.asPath)
+
+	ant.ssh(
+		host: host,
+		username: user,
+		password: password,
+		trust: true,
+		verbose: true,
+		output: output,
+		command: "rm ${workdir} -r -f && mkdir ${workdir}"
+    )
+	
+	ant.scp(remoteTodir: "${user}:${password}@${host}:${workdir}",
+			trust: true,
+			verbose: true,
+			failonerror: true) {
+		fileset(dir: 'vision') {
+			include(name: '**/**')
+		}
+	}
+	
+	ant.ssh(
+		host: host,
+		username: user,
+		password: password,
+		trust: true,
+		verbose: true,
+		output: output,
+		command: "cd ${workdir} && mkdir build && cd build && cmake ../ && make"
+    )
+
 }

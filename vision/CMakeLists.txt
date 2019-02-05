@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 project(vision)
-
-set(CMAKE_CXX_STANDARD 14)
-
 find_package( OpenCV REQUIRED )
+set (CMAKE_CXX_STANDARD 14)
+set(WITH_CUDA ON)
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable(vision src/main/cpp/main.cpp)
-target_link_libraries( vision ${OPENCV_LIBS} )
+target_link_libraries( vision opencv_core opencv_highgui opencv_videoio)
