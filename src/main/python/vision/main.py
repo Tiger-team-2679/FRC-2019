@@ -70,9 +70,9 @@ def process():
                 draw_contour(img, c) # draw contour
                 # TODO send contour to roborio or do something
             cv2.imshow('original', img)
-            while True:
-                if cv2.waitKey(1) == 27: 
-                    break  # esc to quit
+
+            if cv2.waitKey(1) == 27:
+                break  # esc to quit
     cv2.destroyAllWindows()
 
 def main():
