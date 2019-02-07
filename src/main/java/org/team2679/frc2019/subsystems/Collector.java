@@ -21,8 +21,8 @@ public enum Collector {
     private class COLLECTOR_SETTINGS{
         static final int LEFT_MOTOR_PORT = 1;
         static final int RIGHT_MOTOR_PORT = 2;
-        static final int AUTO_COLLECT_DURATION = 2000;
-        static final int AUTO_RELEASE_DURATION = 2000;
+        static final int AUTO_COLLECT_DURATION = 10000;
+        static final int AUTO_RELEASE_DURATION = 10000;
     }
 
     public enum COLLECTOR_STATE {
@@ -105,23 +105,23 @@ public enum Collector {
     public synchronized void setShoot(){
         this.resetPowerForTime();
         this._currentState = COLLECTOR_STATE.RELEASE;
-        _logger.debug("Collector -> Switch to state: " + COLLECTOR_STATE.RELEASE);
+        _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.RELEASE);
     }
 
     public synchronized void setCollect(){
         this.resetPowerForTime();
         this._currentState = COLLECTOR_STATE.COLLECT;
-        _logger.debug("Collector -> Switch to state: " + COLLECTOR_STATE.COLLECT);
+        _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.COLLECT);
     }
 
     public synchronized void setDisabled(){
         this._currentState = COLLECTOR_STATE.DISABLED;
-        _logger.debug("Collector -> Switch to state: " + COLLECTOR_STATE.DISABLED);
+        _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.DISABLED);
     }
 
     public synchronized void setDriverHandled(){
         this._currentState = COLLECTOR_STATE.DRIVER_HANDLED;
-        _logger.debug("Collector -> Switch to state: " + COLLECTOR_STATE.DRIVER_HANDLED);
+        _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.DRIVER_HANDLED);
     }
 
     public synchronized COLLECTOR_STATE getCurrentState(){

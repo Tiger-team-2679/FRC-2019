@@ -81,17 +81,17 @@ public enum SuperStructure {
         this.resetHandlePutCargoAtLevel();
         this._targetLevel = targetLevel;
         this._currentState = SUPERSTRUCTURE_STATE.PUT_CARGO_AT_LEVEL;
-        _logger.debug("SuperStructure -> Switch to state: " + SUPERSTRUCTURE_STATE.PUT_CARGO_AT_LEVEL);
+        _logger.debug("SuperStructure -> Switched to state " + SUPERSTRUCTURE_STATE.PUT_CARGO_AT_LEVEL);
     }
 
     public synchronized void setDisabled(){
         this._currentState = SUPERSTRUCTURE_STATE.DISABLED;
-        _logger.debug("SuperStructure -> Switch to state: " + SUPERSTRUCTURE_STATE.DISABLED);
+        _logger.debug("SuperStructure -> Switched to state " + SUPERSTRUCTURE_STATE.DISABLED);
     }
 
     public synchronized void setDriverHandled(){
         this._currentState = SUPERSTRUCTURE_STATE.DRIVER_HANDLED;
-        _logger.debug("SuperStructure -> Switch to state: " + SUPERSTRUCTURE_STATE.DRIVER_HANDLED);
+        _logger.debug("SuperStructure -> Switched to state " + SUPERSTRUCTURE_STATE.DRIVER_HANDLED);
     }
 
     public synchronized SUPERSTRUCTURE_STATE getCurrentState(){
