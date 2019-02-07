@@ -74,22 +74,22 @@ public enum Elevator {
     public synchronized void setReachTargetLevel(ELEVATOR_LEVEL targetLevel){
         this._targetLevel = targetLevel;
         this._currentState = ELEVATOR_STATE.REACH_LEVEL;
-        _logger.debug("Elevator -> Switch to state: " + ELEVATOR_STATE.REACH_LEVEL + " trying to reach " + targetLevel);
+        _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.REACH_LEVEL + " trying to reach " + targetLevel);
     }
 
     public synchronized void setCoast(){
         this._currentState = ELEVATOR_STATE.COAST;
-        _logger.debug("Elevator -> Switch to state: " + ELEVATOR_STATE.COAST);
+        _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.COAST);
     }
 
     public synchronized void setDisabled(){
         this._currentState = ELEVATOR_STATE.DISABLED;
-        _logger.debug("Elevator -> Switch to state: " + ELEVATOR_STATE.DISABLED);
+        _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.DISABLED);
     }
 
     public synchronized void setDriverHandled(){
         this._currentState = ELEVATOR_STATE.DRIVER_HANDLED;
-        _logger.debug("Elevator -> Switch to state: " + ELEVATOR_STATE.DRIVER_HANDLED);
+        _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.DRIVER_HANDLED);
     }
 
     public synchronized ELEVATOR_STATE getCurrentState(){

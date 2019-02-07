@@ -9,8 +9,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
  */
 public class TalonSRX{
 
-    private double mLastSet = Double.NaN;
-    private ControlMode mLastControlMode = null;
+    private double mLastSet = Double.NaN;private ControlMode mLastControlMode = null;
+
 
     public TalonSRX(int deviceNumber) {
         //super(deviceNumber);
