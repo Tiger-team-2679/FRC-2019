@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${OpenCV_LIBS}../../)
 find_package(OpenCV REQUIRED)
 project(vision)
-include_directories(${OpenCV_INCLUDE_DIRS})
 add_executable(vision src/main/cpp/main.cpp)
 target_link_libraries(vision ${OpenCV_LIBS})
