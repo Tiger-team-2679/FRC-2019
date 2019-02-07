@@ -2,7 +2,9 @@ package org.team2679.frc2019;
 
 import org.team2679.TigerEye.core.Setup;
 import org.team2679.TigerEye.core.Tiger;
-import org.team2679.frc2019.subsystems.Grabber;
+import org.team2679.frc2019.subsystems.Collector;
+import org.team2679.frc2019.subsystems.Elevator;
+import org.team2679.frc2019.subsystems.SuperStructure;
 
 public class Main extends Setup {
 
@@ -13,6 +15,9 @@ public class Main extends Setup {
 
     @Override
     public void init() {
-        Grabber.INSTANCE.registerSubsystem(Tiger.get_main_notifier_50ms());
+        Collector.INSTANCE.registerSubsystem(Tiger.get_main_notifier_50ms());
+        Elevator.INSTANCE.registerSubsystem(Tiger.get_main_notifier_20ms());
+        SuperStructure.INSTANCE.registerSubsystem(Tiger.get_main_notifier_50ms());
+        SuperStructure.INSTANCE.setPutCargoAtLevel(Elevator.ELEVATOR_LEVEL.HATCH_PANEL_LEVEL_3);
     }
 }
