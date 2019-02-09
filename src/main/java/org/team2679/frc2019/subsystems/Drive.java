@@ -1,15 +1,12 @@
 package org.team2679.frc2019.subsystems;
 
-import org.team2679.TigerEye.core.thread.Notifier;
-import org.team2679.TigerEye.core.thread.NotifierListener;
-import org.team2679.TigerEye.lib.log.Logger;
+import org.team2679.TigerEye.lib.thread.Notifier;
+import org.team2679.TigerEye.lib.thread.NotifierListener;
 import org.team2679.frc2019.wrappers.TalonSRX;
 
-public enum Drive {
+public enum Drive implements Subsystem {
 
     INSTANCE;
-
-    private Logger _logger;
 
     private class DRIVE_SETTINGS{
         static final int LEFT_MOTOR_FRONT_PORT = 5;
@@ -19,7 +16,7 @@ public enum Drive {
     }
 
     public enum DRIVE_STATE {
-        DISABLED, DRIVER_HANDLED
+        DISABLED, DRIVER_CONTROL
     }
 
     private TalonSRX _LEFT_MOTOR_FRONT;
@@ -32,7 +29,6 @@ public enum Drive {
         this._RIGHT_MOTOR_FRONT = new TalonSRX(DRIVE_SETTINGS.RIGHT_MOTOR_FRONT_PORT);
         this._LEFT_MOTOR_REAR = new TalonSRX(DRIVE_SETTINGS.LEFT_MOTOR_REAR_PORT);
         this._RIGHT_MOTOR_REAR = new TalonSRX(DRIVE_SETTINGS.RIGHT_MOTOR_REAR_PORT);
-        this._logger = new Logger("Drive_Subsystem");
         _logger.info("Drive -> Initiated");
         this.setDisabled();
     }
@@ -46,7 +42,10 @@ public enum Drive {
             switch (this._currentState) {
                 case DISABLED:
                     break;
-                case DRIVER_HANDLED:
+                case DRIVER_CONTROL:
+                    break;
+                default:
+                    _logger.error("Drive -> unexpected state");
                     break;
             }
         }
@@ -58,8 +57,8 @@ public enum Drive {
     }
 
     public synchronized void setDriverHandled(){
-        this._currentState = DRIVE_STATE.DRIVER_HANDLED;
-        _logger.debug("Drive -> Switched to state " + DRIVE_STATE.DRIVER_HANDLED);
+        this._currentState = DRIVE_STATE.DRIVER_CONTROL;
+        _logger.debug("Drive -> Switched to state " + DRIVE_STATE.DRIVER_CONTROL);
     }
 
     public synchronized DRIVE_STATE getCurrentState(){

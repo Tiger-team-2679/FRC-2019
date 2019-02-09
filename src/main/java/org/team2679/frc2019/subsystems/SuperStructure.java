@@ -1,21 +1,17 @@
 package org.team2679.frc2019.subsystems;
 
-import org.team2679.TigerEye.core.thread.Notifier;
-import org.team2679.TigerEye.core.thread.NotifierListener;
-import org.team2679.TigerEye.lib.log.Logger;
+import org.team2679.TigerEye.lib.thread.Notifier;
+import org.team2679.TigerEye.lib.thread.NotifierListener;
 
-public enum SuperStructure {
+public enum SuperStructure implements Subsystem{
 
     INSTANCE;
 
-    private Logger _logger;
-
     public enum SUPERSTRUCTURE_STATE {
-        DISABLED, DRIVER_HANDLED, PUT_CARGO_AT_LEVEL
+        DISABLED, DRIVER_CONTROL, PUT_CARGO_AT_LEVEL
     }
 
     SuperStructure(){
-        this._logger = new Logger("SuperStructure_Subsystem");
         _logger.info("SuperStructure -> Initiated");
         this.setDisabled();
     }
@@ -35,17 +31,21 @@ public enum SuperStructure {
                         Collector.INSTANCE.setDisabled();
                     }
                     break;
-                case DRIVER_HANDLED:
-                    if(Elevator.INSTANCE.getCurrentState() != Elevator.ELEVATOR_STATE.DRIVER_HANDLED) {
+                case DRIVER_CONTROL:
+                    if(Elevator.INSTANCE.getCurrentState() != Elevator.ELEVATOR_STATE.DRIVER_CONTROL) {
                         Elevator.INSTANCE.setDriverHandled();
                     }
-                    if(Collector.INSTANCE.getCurrentState() != Collector.COLLECTOR_STATE.DRIVER_HANDLED) {
+                    if(Collector.INSTANCE.getCurrentState() != Collector.COLLECTOR_STATE.DRIVER_CONTROL) {
                         Collector.INSTANCE.setDriverHandled();
                     }
+                    break;
                 case PUT_CARGO_AT_LEVEL:
                     if(handlePutCargoAtLevel()){
                         this.setDriverHandled();
                     }
+                    break;
+                default:
+                    _logger.error("SuperStructure -> unexpected state");
                     break;
             }
         }
@@ -90,8 +90,8 @@ public enum SuperStructure {
     }
 
     public synchronized void setDriverHandled(){
-        this._currentState = SUPERSTRUCTURE_STATE.DRIVER_HANDLED;
-        _logger.debug("SuperStructure -> Switched to state " + SUPERSTRUCTURE_STATE.DRIVER_HANDLED);
+        this._currentState = SUPERSTRUCTURE_STATE.DRIVER_CONTROL;
+        _logger.debug("SuperStructure -> Switched to state " + SUPERSTRUCTURE_STATE.DRIVER_CONTROL);
     }
 
     public synchronized SUPERSTRUCTURE_STATE getCurrentState(){
