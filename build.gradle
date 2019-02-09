@@ -1,13 +1,12 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1"
-    id "org.hidetake.ssh" version "2.9.0"
+    id "edu.wpi.first.GradleRIO" version "2019.2.1"
 }
 
 repositories {
     mavenCentral()
-    maven { url "https://jitpack.io"}
-    maven {     url "http://devsite.ctr-electronics.com/maven/release/"}
+    maven { url "https://jitpack.io" }
+    maven { url "http://devsite.ctr-electronics.com/maven/release/" }
 }
 
 ext.PhoenixVersion = "5.12.1"
@@ -26,30 +25,6 @@ deploy {
     }
 }
 
-remotes {
-  jetson {
-    host = '192.168.137.22'
-    user = 'nvidia'
-    password = 'nvidia'
-  }
-}
-
-ssh.settings {
-  fileTransfer = 'scp'
-}
-
-task jetsonDeploy {
-  doLast {
-    ssh.run {
-        session(remotes.jetson) {
-            def root = new File(projectDir, "vision")
-            FileTree myFileTree = fileTree(root.path)
-            put from: myFileTree.getDir(), into: '/home/nvidia/Desktop/frc/'
-        }
-    }
-  }
-}
-
 dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
@@ -58,7 +33,7 @@ dependencies {
     compile "com.ctre.phoenix:api-java:${PhoenixVersion}"
     compile "com.ctre.phoenix:wpiapi-java:${PhoenixVersion}"
     nativeZip "com.ctre.phoenix:cci:${PhoenixVersion}:linuxathena@zip"
-    compile 'com.github.Tiger-team-2679:Tiger-Eye:13.01.2019'
+    compile 'com.github.Tiger-team-2679:Tiger-Eye:09.02.2019'
 }
 
 def robotManifest = {

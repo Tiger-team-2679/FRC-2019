@@ -1,16 +1,13 @@
 package org.team2679.frc2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import org.team2679.TigerEye.core.thread.Notifier;
-import org.team2679.TigerEye.core.thread.NotifierListener;
-import org.team2679.TigerEye.lib.log.Logger;
+import org.team2679.TigerEye.lib.thread.Notifier;
+import org.team2679.TigerEye.lib.thread.NotifierListener;
 import org.team2679.frc2019.wrappers.TalonSRX;
 
-public enum Elevator {
+public enum Elevator implements Subsystem {
 
     INSTANCE;
-
-    private Logger _logger;
 
     private class ELEVATOR_SETTINGS {
         static final int LEFT_MOTOR_PORT = 3;
@@ -18,7 +15,7 @@ public enum Elevator {
     }
 
     public enum ELEVATOR_STATE {
-        DISABLED, DRIVER_HANDLED, COAST, REACH_LEVEL
+        DISABLED, DRIVER_CONTROL, COAST, REACH_LEVEL
     }
 
     public enum ELEVATOR_LEVEL {
@@ -43,7 +40,6 @@ public enum Elevator {
     Elevator(){
         this._LEFT_MOTOR = new TalonSRX(ELEVATOR_SETTINGS.LEFT_MOTOR_PORT);
         this._RIGHT_MOTOR = new TalonSRX(ELEVATOR_SETTINGS.RIGHT_MOTOR_PORT);
-        this._logger = new Logger("Elevator_Subsystem");
         _logger.info("Elevator -> Initiated");
         this.setDisabled();
     }
@@ -65,7 +61,10 @@ public enum Elevator {
                     break;
                 case COAST:
                     break;
-                case DRIVER_HANDLED:
+                case DRIVER_CONTROL:
+                    break;
+                default:
+                    _logger.error("Elevator -> unexpected state");
                     break;
             }
         }
@@ -88,8 +87,8 @@ public enum Elevator {
     }
 
     public synchronized void setDriverHandled(){
-        this._currentState = ELEVATOR_STATE.DRIVER_HANDLED;
-        _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.DRIVER_HANDLED);
+        this._currentState = ELEVATOR_STATE.DRIVER_CONTROL;
+        _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.DRIVER_CONTROL);
     }
 
     public synchronized ELEVATOR_STATE getCurrentState(){

@@ -1,9 +1,8 @@
 package org.team2679.frc2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import org.team2679.TigerEye.core.thread.Notifier;
-import org.team2679.TigerEye.core.thread.NotifierListener;
-import org.team2679.TigerEye.lib.log.Logger;
+import org.team2679.TigerEye.lib.thread.Notifier;
+import org.team2679.TigerEye.lib.thread.NotifierListener;
 import org.team2679.TigerEye.lib.util.Timer;
 import org.team2679.frc2019.wrappers.TalonSRX;
 
@@ -12,11 +11,9 @@ import org.team2679.frc2019.wrappers.TalonSRX;
  * The logic is implemented in a state based way
  *
  */
-public enum Collector {
+public enum Collector implements Subsystem {
 
     INSTANCE;
-
-    private Logger _logger;
 
     private class COLLECTOR_SETTINGS{
         static final int LEFT_MOTOR_PORT = 1;
@@ -26,7 +23,7 @@ public enum Collector {
     }
 
     public enum COLLECTOR_STATE {
-        DISABLED, RELEASE, COLLECT, DRIVER_HANDLED
+        DISABLED, RELEASE, COLLECT, DRIVER_CONTROL
     }
 
     private TalonSRX _LEFT_MOTOR;
@@ -35,7 +32,6 @@ public enum Collector {
     Collector(){
         this._LEFT_MOTOR = new TalonSRX(COLLECTOR_SETTINGS.LEFT_MOTOR_PORT);
         this._RIGHT_MOTOR = new TalonSRX(COLLECTOR_SETTINGS.RIGHT_MOTOR_PORT);
-        this._logger = new Logger("Collector_Subsystem");
         _logger.info("Collector -> Initiated");
         this.setDisabled();
     }
@@ -61,7 +57,10 @@ public enum Collector {
                         this.setDisabled();
                     }
                     break;
-                case DRIVER_HANDLED:
+                case DRIVER_CONTROL:
+                    break;
+                default:
+                    _logger.error("Collector -> unexpected state");
                     break;
             }
         }
@@ -120,8 +119,8 @@ public enum Collector {
     }
 
     public synchronized void setDriverHandled(){
-        this._currentState = COLLECTOR_STATE.DRIVER_HANDLED;
-        _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.DRIVER_HANDLED);
+        this._currentState = COLLECTOR_STATE.DRIVER_CONTROL;
+        _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.DRIVER_CONTROL);
     }
 
     public synchronized COLLECTOR_STATE getCurrentState(){
