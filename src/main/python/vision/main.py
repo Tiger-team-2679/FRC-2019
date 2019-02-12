@@ -59,15 +59,17 @@ def process():
     while True: # work until break
         ret_val,img = CAMERA.read() # get frame from camera
         if ret_val: # check if frame exists
-            c =  detect_cargo(img) # find the cargo's contour
+            detect_2_strips(img)
+            c =  detect_2_strips(img) # find the cargo's contour
             if c is not None:
-                distance = get_cargo_abs_dis(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
-                x, y, w, h = cv2.boundingRect(c)
-                print (img.shape[0])
-                angle = get_angle_2_points( x , x+ w, CAMERA_VIEW_ANGLE, img.shape[1])
-                print(distance)
+                #distance = get_cargo_abs_dis(c,CARGO_WIDTH, CAMERA_VIEW_ANGLE, img.shape[1]) # get distance and angle from cargo
+                #x, y, w, h = cv2.boundingRect(c)
+                #print (img.shape[0])
+                #angle = get_angle_2_points( x , x+ w, CAMERA_VIEW_ANGLE, img.shape[1])
+                #print(distance)
                 #print(math.degrees(angle))
-                draw_contour(img, c) # draw contour
+                for co in c:
+                    draw_contour(img, co) # draw contour
                 # TODO send contour to roborio or do something
             cv2.imshow('original', img)
 
@@ -76,6 +78,7 @@ def process():
     cv2.destroyAllWindows()
 
 def main():
+    print(find_duplicate([2, 2, 3, 4, 6, 3]))
     process()
 
 if __name__ == '__main__':
