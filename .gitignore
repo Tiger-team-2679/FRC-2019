@@ -1,5 +1,5 @@
 bin/
-build/
+**/build/
 *.ipr
 *.iml
 *.iws
@@ -14,3 +14,4 @@ tmp/
 gradle/.launch/
 Tiger-Eye/
 tiger/
+JetsonDeployOutput.txt

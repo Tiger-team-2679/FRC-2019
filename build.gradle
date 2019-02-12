@@ -55,7 +55,7 @@ task deployJetson() {
 	def user = 'nvidia'
 	def password = 'nvidia'
 	def workdir = '/home/nvidia/Desktop/frc/vision'
-	def output = 'sshoutput.txt'
+	def output = 'JetsonDeployOutput.txt'
 	
 	ant.taskdef(
 		name: 'scp',
