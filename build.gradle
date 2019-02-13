@@ -50,13 +50,15 @@ jar.doFirst {
     manifest robotManifest
 }
 
-task deployJetson() {
-    def host = 'tegra-ubuntu.local'
-	def user = 'nvidia'
-	def password = 'nvidia'
-	def workdir = '/home/nvidia/Desktop/frc/vision'
-	def output = 'JetsonDeployOutput.txt'
+def jetson_project_dir = 'vision'
+def jetson_host = 'tegra-ubuntu.local'
+def jetson_user = 'nvidia'
+def jetson_password = 'nvidia'
+def jetson_workdir = '/home/nvidia/Desktop/frc/${jetson_project_dir}'
+def jetson_output = 'JetsonDeployOutput.txt'
 	
+
+task jetsonDeploy() {
 	ant.taskdef(
 		name: 'scp',
 		classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
@@ -68,32 +70,32 @@ task deployJetson() {
         classpath: configurations.sshAntTask.asPath)
 
 	ant.ssh(
-		host: host,
-		username: user,
-		password: password,
+		host: jetson_host,
+		username: jetson_user,
+		password: jetson_password,
 		trust: true,
 		verbose: true,
-		output: output,
-		command: "rm ${workdir} -r -f && mkdir ${workdir}"
+		output: jetson_output,
+		command: "rm ${jetson_workdir} -r -f && mkdir ${jetson_workdir}"
     )
 	
-	ant.scp(remoteTodir: "${user}:${password}@${host}:${workdir}",
+	ant.scp(remoteTodir: "${jetson_user}:${jetson_password}@${jetson_host}:${jetson_workdir}",
 			trust: true,
 			verbose: true,
 			failonerror: true) {
-		fileset(dir: 'vision') {
+		fileset(dir: jetson_project_dir) {
 			include(name: '**/**')
 		}
 	}
 	
 	ant.ssh(
-		host: host,
-		username: user,
-		password: password,
+		host: jetson_host,
+		username: jetson_user,
+		password: jetson_password,
 		trust: true,
 		verbose: true,
-		output: output,
-		command: "cd ${workdir} && mkdir build && cd build && cmake ../ && make"
+		output: jetson_output,
+		command: "cd ${jetson_workdir} && mkdir build && cd build && cmake ../ && make"
     )
 
 }

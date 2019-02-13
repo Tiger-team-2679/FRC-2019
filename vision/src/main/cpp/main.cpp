@@ -1,36 +1,52 @@
 #include <iostream>
 #include <string>
-#include <opencv2/core/core_c.h>
+
+#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/videoio/videoio.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#define WIDTH 1280
-#define HEIGHT 720
+#include "VideoStreamer.h"
+
+#define WIDTH 640
+#define HEIGHT 480
 #define FPS 30
-#define CAM_SRC "nvcamerasrc  fpsRange='FPS FPS' ! video/x-raw(memory:NVMM), width=(int)WIDTH, height=(int)HEIGHT,format=(string)I420, framerate=(fraction)FPS/1 ! nvvidconv flip-method=0 ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink"
+
 
 int main() {
-
-    // Define the gstream pipeline
-    std::string pipeline = CAM_SRC;
-
-    // Create OpenCV capture object, ensure it works.
-    cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
-    if (!cap.isOpened()) {
-        std::cout << "Connection failed"  << std::endl;
+    std::string pipe_args = "nvcamerasrc fpsRange='" + std::to_string(FPS) + " " + std::to_string(FPS) + "' ! video/x-raw(memory:NVMM)" \
+                            ", width=(int)" + std::to_string(WIDTH) + \
+                            ", height=(int)" + std::to_string(HEIGHT) + ",format=(string)I420, framerate=(fraction)FPS/1 !" \
+                            " nvvidconv flip-method=0 ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw," \
+                            " format=(string)BGR ! appsink ";
+    cv::VideoCapture cap;
+    cap.open(pipe_args);
+    if(!cap.isOpened()) {
+        std::cerr << "Can't create camera reader" << std::endl;
         return -1;
     }
 
-    // View video
-    cv::Mat frame;
-    cv::namedWindow("cam",1);
-    for(;;)
-    {
-        cap >> frame; // get a new frame from camera
-        cv::imshow("cam", frame);
-        if(cv::waitKey(30) >= 0) break;
+    VideoStreamer driver_station_stream("10.10.2.61", 1234, WIDTH, HEIGHT, FPS);
+
+    if (!driver_station_stream.isOpened()) {
+        cap.release();
+        std::cerr << "Can't create gstreamer writer." << std::endl;
+        return -1;
     }
-    // the camera will be deinitialized automatically in VideoCapture destructor
-    return 0;
+
+    cv::Mat frame;
+
+    while (true) {
+        try {
+            cap >> frame;
+            if (frame.empty()) {
+                throw;
+            }
+            driver_station_stream.write(frame);
+        } catch (...) {
+            std::cout << "Something went wrong" << std::endl;
+            break;
+        }
+    }
+    cap.release();
 }
