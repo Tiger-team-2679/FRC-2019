@@ -63,6 +63,7 @@ public enum Elevator implements Subsystem {
                 case COAST:
                     break;
                 case DRIVER_CONTROL:
+                    //5 is the right stick y axis
                     this._LEFT_MOTOR.set(ControlMode.Disabled, -IO.XBOX.getRawAxis(5));
                     this._RIGHT_MOTOR.set(ControlMode.Disabled, -IO.XBOX.getRawAxis(5));
                     break;
