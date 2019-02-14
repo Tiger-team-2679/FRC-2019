@@ -23,5 +23,6 @@ public class Main extends Setup {
         //SuperStructure.INSTANCE.setPutCargoAtLevel(Elevator.ELEVATOR_LEVEL.HATCH_PANEL_LEVEL_3);
         Drive.INSTANCE.setDriverControl();
         Elevator.INSTANCE.setDriverControl();
+        Collector.INSTANCE.setDriverControl();
     }
 }
