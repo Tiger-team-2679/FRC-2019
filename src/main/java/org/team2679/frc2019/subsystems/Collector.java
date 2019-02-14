@@ -5,6 +5,7 @@ import org.team2679.TigerEye.lib.thread.Notifier;
 import org.team2679.TigerEye.lib.thread.NotifierListener;
 import org.team2679.TigerEye.lib.util.Timer;
 import org.team2679.frc2019.wrappers.TalonSRX;
+import edu.wpi.first.wpilibj.Spark;
 
 /**
  * Singleton class for the collector subsystem
@@ -118,7 +119,7 @@ public enum Collector implements Subsystem {
         _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.DISABLED);
     }
 
-    public synchronized void setDriverHandled(){
+    public synchronized void setDriverControl(){
         this._currentState = COLLECTOR_STATE.DRIVER_CONTROL;
         _logger.debug("Collector -> Switched to state " + COLLECTOR_STATE.DRIVER_CONTROL);
     }

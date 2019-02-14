@@ -3,15 +3,16 @@ package org.team2679.frc2019.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.team2679.TigerEye.lib.thread.Notifier;
 import org.team2679.TigerEye.lib.thread.NotifierListener;
-import org.team2679.frc2019.wrappers.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import org.team2679.frc2019.IO;
 
 public enum Elevator implements Subsystem {
 
     INSTANCE;
 
     private class ELEVATOR_SETTINGS {
-        static final int LEFT_MOTOR_PORT = 3;
-        static final int RIGHT_MOTOR_PORT = 4;
+        static final int LEFT_MOTOR_PORT = 5;
+        static final int RIGHT_MOTOR_PORT = 6;
     }
 
     public enum ELEVATOR_STATE {
@@ -34,12 +35,12 @@ public enum Elevator implements Subsystem {
         }
     }
 
-    private TalonSRX _LEFT_MOTOR;
-    private TalonSRX _RIGHT_MOTOR;
+    private WPI_TalonSRX _LEFT_MOTOR;
+    private WPI_TalonSRX _RIGHT_MOTOR;
 
     Elevator(){
-        this._LEFT_MOTOR = new TalonSRX(ELEVATOR_SETTINGS.LEFT_MOTOR_PORT);
-        this._RIGHT_MOTOR = new TalonSRX(ELEVATOR_SETTINGS.RIGHT_MOTOR_PORT);
+        this._LEFT_MOTOR = new WPI_TalonSRX(ELEVATOR_SETTINGS.LEFT_MOTOR_PORT);
+        this._RIGHT_MOTOR = new WPI_TalonSRX(ELEVATOR_SETTINGS.RIGHT_MOTOR_PORT);
         _logger.info("Elevator -> Initiated");
         this.setDisabled();
     }
@@ -62,6 +63,8 @@ public enum Elevator implements Subsystem {
                 case COAST:
                     break;
                 case DRIVER_CONTROL:
+                    this._LEFT_MOTOR.set(ControlMode.Disabled, -IO.XBOX.getRawAxis(5));
+                    this._RIGHT_MOTOR.set(ControlMode.Disabled, -IO.XBOX.getRawAxis(5));
                     break;
                 default:
                     _logger.error("Elevator -> unexpected state");
@@ -86,7 +89,7 @@ public enum Elevator implements Subsystem {
         _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.DISABLED);
     }
 
-    public synchronized void setDriverHandled(){
+    public synchronized void setDriverControl(){
         this._currentState = ELEVATOR_STATE.DRIVER_CONTROL;
         _logger.debug("Elevator -> Switched to state " + ELEVATOR_STATE.DRIVER_CONTROL);
     }

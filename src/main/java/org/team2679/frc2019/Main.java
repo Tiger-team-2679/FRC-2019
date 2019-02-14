@@ -14,12 +14,14 @@ public class Main extends Setup {
         Drive.INSTANCE.registerSubsystem(Tiger.get_main_notifier_50ms());
         Collector.INSTANCE.registerSubsystem(Tiger.get_main_notifier_100ms());
         Elevator.INSTANCE.registerSubsystem(Tiger.get_main_notifier_20ms());
-        SuperStructure.INSTANCE.registerSubsystem(Tiger.get_main_notifier_50ms());
+        //SuperStructure.INSTANCE.registerSubsystem(Tiger.get_main_notifier_50ms());
     }
 
     @Override
     public void init() {
         // run the super structure to control all of the subsystems
-        SuperStructure.INSTANCE.setPutCargoAtLevel(Elevator.ELEVATOR_LEVEL.HATCH_PANEL_LEVEL_3);
+        //SuperStructure.INSTANCE.setPutCargoAtLevel(Elevator.ELEVATOR_LEVEL.HATCH_PANEL_LEVEL_3);
+        Drive.INSTANCE.setDriverControl();
+        Elevator.INSTANCE.setDriverControl();
     }
 }
