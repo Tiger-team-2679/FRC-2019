@@ -7,6 +7,9 @@ TigerCamera::TigerCamera(cv::VideoCapture * cap) {
 
 void TigerCamera::start() {
     this->_isRunning = true;
+	this->_currently_used_mat = cv::Mat(HEIGHT, WIDTH, CV_8UC3);
+	this->_currently_written_mat = cv::Mat(HEIGHT, WIDTH, CV_8UC3);
+	this->_free_mat = cv::Mat(HEIGHT, WIDTH, CV_8UC3);
     this->_thread = std::thread(&TigerCamera::on_update, this);
 }
 
@@ -20,13 +23,13 @@ void TigerCamera::stop() {
 void TigerCamera::on_update() {
     while(this->_isRunning){
         try{
-            std::cout << "TigerCamera -> Started" << std::endl;
-            while (this->_cap->grab()){
-            }
-            std::cout << "TigerCamera -> Grabbed Frame" << std::endl;
-            this->_mutex.lock();
-            this->_cap->retrieve(this->_frame);
-            this->_mutex.unlock();
+			this->_mutex.lock();
+
+			this->_newExist = true;
+			std::swap(this->_free_mat, this->_currently_written_mat);
+
+			this->_mutex.unlock();
+			*this->_cap >> this->_currently_written_mat;
         }
         catch (std::exception &e){
             std::cerr << "TigerCamera Exception: " << std::endl << e.what() << std::endl;
@@ -35,9 +38,14 @@ void TigerCamera::on_update() {
 }
 
 cv::Mat TigerCamera::get_latest_frame() {
-    cv::Mat tmp;
     _mutex.lock();
-    _frame.copyTo(tmp);
+	if (!this->_newExist)
+	{
+		_mutex.unlock();
+		return cv::Mat(); // return empty mat
+	}
+	_newExist = false;
+	std::swap(this->_currently_used_mat, this->_free_mat);
     _mutex.unlock();
-    return tmp;
+	return this->_currently_used_mat;
 }
