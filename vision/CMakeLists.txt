@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 project(vision)
 
 find_package( OpenCV REQUIRED )
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 set(WITH_CUDA ON)
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 file(GLOB vision_SRC
         "src/main/cpp/*.hpp"
         "src/main/cpp/*.cpp"
+        "src/main/cpp/*.h"
         )
 
 add_executable(vision ${vision_SRC})
