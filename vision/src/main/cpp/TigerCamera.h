@@ -5,13 +5,10 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include <array>
 #include <utility>
 
 #include <opencv2/videoio/videoio.hpp>
-constexpr int WIDTH = 640;
-constexpr int HEIGHT = 480;
-constexpr int FPS = 30;
+#include "camera_properties.h"
 class TigerCamera {
 public:
     explicit TigerCamera(cv::VideoCapture * cap);

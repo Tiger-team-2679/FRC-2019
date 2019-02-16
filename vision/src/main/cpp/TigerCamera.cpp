@@ -4,7 +4,6 @@ TigerCamera::TigerCamera(cv::VideoCapture * cap) {
     this->_cap = cap;
     this->_isRunning = false;
 }
-
 void TigerCamera::start() {
     this->_isRunning = true;
 	this->_currently_used_mat = cv::Mat(HEIGHT, WIDTH, CV_8UC3);
