@@ -11,8 +11,8 @@ public enum Elevator implements Subsystem {
     INSTANCE;
 
     private class ELEVATOR_SETTINGS {
-        static final int LEFT_MOTOR_PORT = 5;
-        static final int RIGHT_MOTOR_PORT = 6;
+        static final int LEFT_MOTOR_PORT = 6;
+        static final int RIGHT_MOTOR_PORT = 5;
     }
 
     public enum ELEVATOR_STATE {
@@ -54,8 +54,8 @@ public enum Elevator implements Subsystem {
         synchronized (this) {
             switch (this._currentState) {
                 case DISABLED:
-                    this._LEFT_MOTOR.set(ControlMode.Disabled, 0);
-                    this._RIGHT_MOTOR.set(ControlMode.Disabled, 0);
+                    this._LEFT_MOTOR.set(0);
+                    this._RIGHT_MOTOR.set(0);
                     break;
                 case REACH_LEVEL:
                     this.setCoast();
@@ -64,8 +64,8 @@ public enum Elevator implements Subsystem {
                     break;
                 case DRIVER_CONTROL:
                     //5 is the right stick y axis
-                    this._LEFT_MOTOR.set(ControlMode.Disabled, -IO.XBOX.getRawAxis(5));
-                    this._RIGHT_MOTOR.set(ControlMode.Disabled, -IO.XBOX.getRawAxis(5));
+                    this._LEFT_MOTOR.set(-IO.XBOX.getRawAxis(5));
+                    this._RIGHT_MOTOR.set(-IO.XBOX.getRawAxis(5));
                     break;
                 default:
                     _logger.error("Elevator -> unexpected state");
