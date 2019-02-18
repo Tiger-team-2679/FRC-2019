@@ -18,8 +18,8 @@ public enum Collector implements Subsystem {
 
     private class COLLECTOR_SETTINGS{
         static final int LEFT_MOTOR_PORT = 3;
-        static final int RIGHT_MOTOR_PORT = 0;
-        static final int AXIS_MOTOR_PORT = 1;
+        static final int RIGHT_MOTOR_PORT = 1;
+        static final int AXIS_MOTOR_PORT = 0;
         static final int PUSHER_MOTOR_PORT = 2;
         static final int AUTO_COLLECT_DURATION = 10000;
         static final int AUTO_RELEASE_DURATION = 10000;
@@ -66,10 +66,26 @@ public enum Collector implements Subsystem {
                     //}
                     break;
                 case DRIVER_CONTROL:
-                    _LEFT_SPARK.set(-IO.XBOX.getRawAxis(1));
-                    _RIGHT_SPARK.set(-IO.XBOX.getRawAxis(2));
-                    _AXIS_MOTOR.set(-IO.XBOX.getRawAxis(0));
-                    _PUSHER_MOTOR.set(-IO.XBOX.getRawAxis(5));
+                    if(IO.XBOX.getRawButton(5)) {
+                        _LEFT_SPARK.set(1);
+                        _RIGHT_SPARK.set(-1);
+                    }
+                    else if(IO.XBOX.getRawButton(6))
+                    {
+                        _LEFT_SPARK.set(-1);
+                        _RIGHT_SPARK.set(1);
+                    }
+                    else
+                    {
+                        _LEFT_SPARK.set(0);
+                        _RIGHT_SPARK.set(0);
+                    }
+                    if(IO.XBOX.getRawButton(1))
+                    {
+                        _PUSHER_MOTOR.set(0.5);
+                    }
+                    else _PUSHER_MOTOR.set(0);
+                    _AXIS_MOTOR.set(-IO.XBOX.getRawAxis(1));
                     break;
                 default:
                     _logger.error("Collector -> unexpected state");
