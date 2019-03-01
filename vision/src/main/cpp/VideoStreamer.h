@@ -11,5 +11,5 @@ public :
     bool isOpened() const;
     void write(const cv::Mat& mat);
 private:
-    cv::VideoWriter pipeline_out;
+    //cv::VideoWriter pipeline_out;
 };

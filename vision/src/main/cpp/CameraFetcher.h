@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <exception>
 #include <iostream>
@@ -8,10 +7,11 @@
 #include <utility>
 
 #include <opencv2/videoio/videoio.hpp>
-#include "camera_properties.h"
-class TigerCamera {
+#include "properties.h"
+
+class CameraSmartFetcher {
 public:
-    explicit TigerCamera(cv::VideoCapture * cap);
+    explicit CameraSmartFetcher(cv::VideoCapture * cap);
     void on_update();
     void start();
     void stop();

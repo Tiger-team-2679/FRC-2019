@@ -1,25 +1,25 @@
-#include "TigerCamera.h"
+#include "CameraSmartFetcher.h"
 
-TigerCamera::TigerCamera(cv::VideoCapture * cap) {
+CameraSmartFetcher::CameraSmartFetcher(cv::VideoCapture * cap) {
     this->_cap = cap;
     this->_isRunning = false;
 }
-void TigerCamera::start() {
+void CameraSmartFetcher::start() {
     this->_isRunning = true;
 	this->_currently_used_mat = cv::Mat(HEIGHT, WIDTH, CV_8UC3);
 	this->_currently_written_mat = cv::Mat(HEIGHT, WIDTH, CV_8UC3);
 	this->_free_mat = cv::Mat(HEIGHT, WIDTH, CV_8UC3);
-    this->_thread = std::thread(&TigerCamera::on_update, this);
+    this->_thread = std::thread(&CameraSmartFetcher::on_update, this);
 }
 
-void TigerCamera::stop() {
+void CameraSmartFetcher::stop() {
     this->_isRunning = false;
     if(this->_thread.joinable()){
         this->_thread.join();
     }
 }
 
-void TigerCamera::on_update() {
+void CameraSmartFetcher::on_update() {
     while(this->_isRunning){
         try{
 			this->_mutex.lock();
@@ -31,12 +31,12 @@ void TigerCamera::on_update() {
 			*this->_cap >> this->_currently_written_mat;
         }
         catch (std::exception &e){
-            std::cerr << "TigerCamera Exception: " << std::endl << e.what() << std::endl;
+            std::cerr << "CameraSmartFetcher Exception: " << std::endl << e.what() << std::endl;
         }
     }
 }
 
-cv::Mat TigerCamera::get_latest_frame() {
+cv::Mat CameraSmartFetcher::get_latest_frame() {
     _mutex.lock();
 	if (!this->_newExist)
 	{
