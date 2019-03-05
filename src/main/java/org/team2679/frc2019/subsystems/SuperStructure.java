@@ -33,15 +33,15 @@ public enum SuperStructure implements Subsystem{
                     break;
                 case DRIVER_CONTROL:
                     if(Elevator.INSTANCE.getCurrentState() != Elevator.ELEVATOR_STATE.DRIVER_CONTROL) {
-                        Elevator.INSTANCE.setDriverHandled();
+                        Elevator.INSTANCE.setDriverControl();
                     }
                     if(Collector.INSTANCE.getCurrentState() != Collector.COLLECTOR_STATE.DRIVER_CONTROL) {
-                        Collector.INSTANCE.setDriverHandled();
+                        Collector.INSTANCE.setDriverControl();
                     }
                     break;
                 case PUT_CARGO_AT_LEVEL:
                     if(handlePutCargoAtLevel()){
-                        this.setDriverHandled();
+                        this.setDriverControl();
                     }
                     break;
                 default:
@@ -89,7 +89,7 @@ public enum SuperStructure implements Subsystem{
         _logger.debug("SuperStructure -> Switched to state " + SUPERSTRUCTURE_STATE.DISABLED);
     }
 
-    public synchronized void setDriverHandled(){
+    public synchronized void setDriverControl(){
         this._currentState = SUPERSTRUCTURE_STATE.DRIVER_CONTROL;
         _logger.debug("SuperStructure -> Switched to state " + SUPERSTRUCTURE_STATE.DRIVER_CONTROL);
     }

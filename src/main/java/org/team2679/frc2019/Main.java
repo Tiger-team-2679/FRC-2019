@@ -24,5 +24,8 @@ public class Main extends Setup {
     public void init() {
         // run the super structure to control all of the subsystems
         //SuperStructure.INSTANCE.setPutCargoAtLevel(Elevator.ELEVATOR_LEVEL.HATCH_PANEL_LEVEL_3);
+        Drive.INSTANCE.setDriverControl();
+        Elevator.INSTANCE.setDriverControl();
+        Collector.INSTANCE.setDriverControl();
     }
 }

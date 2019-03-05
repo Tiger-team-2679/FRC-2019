@@ -2,33 +2,47 @@ package org.team2679.frc2019.subsystems;
 
 import org.team2679.TigerEye.lib.thread.Notifier;
 import org.team2679.TigerEye.lib.thread.NotifierListener;
-import org.team2679.frc2019.wrappers.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import org.team2679.frc2019.IO;
 
 public enum Drive implements Subsystem {
 
     INSTANCE;
 
     private class DRIVE_SETTINGS{
-        static final int LEFT_MOTOR_FRONT_PORT = 5;
-        static final int RIGHT_MOTOR_FRONT_PORT = 6;
-        static final int LEFT_MOTOR_REAR_PORT = 7;
-        static final int RIGHT_MOTOR_REAR_PORT = 8;
+        static final int LEFT_MOTOR_FRONT_PORT = 2;
+        static final int RIGHT_MOTOR_FRONT_PORT = 4;
+        static final int LEFT_MOTOR_REAR_PORT = 1;
+        static final int RIGHT_MOTOR_REAR_PORT = 3;
     }
 
     public enum DRIVE_STATE {
         DISABLED, DRIVER_CONTROL
     }
 
-    private TalonSRX _LEFT_MOTOR_FRONT;
-    private TalonSRX _RIGHT_MOTOR_FRONT;
-    private TalonSRX _LEFT_MOTOR_REAR;
-    private TalonSRX _RIGHT_MOTOR_REAR;
+    private WPI_TalonSRX _LEFT_MOTOR_FRONT;
+    private WPI_TalonSRX _RIGHT_MOTOR_FRONT;
+    private WPI_TalonSRX _LEFT_MOTOR_REAR;
+    private WPI_TalonSRX _RIGHT_MOTOR_REAR;
+
+    private SpeedControllerGroup _LEFT_MOTOR_GROUP;
+    private SpeedControllerGroup _RIGHT_MOTOR_GROUP;
+
+    private DifferentialDrive _DIFFERENTIAL_DRIVE;
 
     Drive(){
-        this._LEFT_MOTOR_FRONT = new TalonSRX(DRIVE_SETTINGS.LEFT_MOTOR_FRONT_PORT);
-        this._RIGHT_MOTOR_FRONT = new TalonSRX(DRIVE_SETTINGS.RIGHT_MOTOR_FRONT_PORT);
-        this._LEFT_MOTOR_REAR = new TalonSRX(DRIVE_SETTINGS.LEFT_MOTOR_REAR_PORT);
-        this._RIGHT_MOTOR_REAR = new TalonSRX(DRIVE_SETTINGS.RIGHT_MOTOR_REAR_PORT);
+        this._LEFT_MOTOR_FRONT = new WPI_TalonSRX(DRIVE_SETTINGS.LEFT_MOTOR_FRONT_PORT);
+        this._RIGHT_MOTOR_FRONT = new WPI_TalonSRX(DRIVE_SETTINGS.RIGHT_MOTOR_FRONT_PORT);
+        this._LEFT_MOTOR_REAR = new WPI_TalonSRX(DRIVE_SETTINGS.LEFT_MOTOR_REAR_PORT);
+        this._RIGHT_MOTOR_REAR = new WPI_TalonSRX(DRIVE_SETTINGS.RIGHT_MOTOR_REAR_PORT);
+
+        _LEFT_MOTOR_GROUP = new SpeedControllerGroup(_LEFT_MOTOR_REAR, _LEFT_MOTOR_FRONT);
+        _RIGHT_MOTOR_GROUP = new SpeedControllerGroup(_RIGHT_MOTOR_REAR, _RIGHT_MOTOR_FRONT);
+
+        _DIFFERENTIAL_DRIVE =  new DifferentialDrive(_LEFT_MOTOR_GROUP, _RIGHT_MOTOR_GROUP);
+
         _logger.info("Drive -> Initiated");
         this.setDisabled();
     }
@@ -43,6 +57,7 @@ public enum Drive implements Subsystem {
                 case DISABLED:
                     break;
                 case DRIVER_CONTROL:
+                    _DIFFERENTIAL_DRIVE.arcadeDrive(-IO.JOYSTICK.getY(), IO.JOYSTICK.getX());
                     break;
                 default:
                     _logger.error("Drive -> unexpected state");
@@ -56,9 +71,9 @@ public enum Drive implements Subsystem {
         _logger.debug("Drive -> Switched to state " + DRIVE_STATE.DISABLED);
     }
 
-    public synchronized void setDriverHandled(){
+    public synchronized void setDriverControl(){
         this._currentState = DRIVE_STATE.DRIVER_CONTROL;
-        _logger.debug("Drive -> Switched to state " + DRIVE_STATE.DRIVER_CONTROL);
+       _logger.debug("Drive -> Switched to state " + DRIVE_STATE.DRIVER_CONTROL);
     }
 
     public synchronized DRIVE_STATE getCurrentState(){
