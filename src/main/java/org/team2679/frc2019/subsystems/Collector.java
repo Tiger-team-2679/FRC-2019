@@ -28,7 +28,6 @@ public enum Collector implements Subsystem {
     public enum COLLECTOR_STATE {
         DISABLED, RELEASE, COLLECT, DRIVER_CONTROL
     }
-
     private Spark _LEFT_SPARK;
     private Spark _RIGHT_SPARK;
     private Spark _AXIS_MOTOR;
@@ -68,23 +67,28 @@ public enum Collector implements Subsystem {
                 case DRIVER_CONTROL:
                     if(IO.XBOX.getRawButton(5)) {
                         _LEFT_SPARK.set(1);
-                        _RIGHT_SPARK.set(-1);
+                        _RIGHT_SPARK.set(1);
                     }
                     else if(IO.XBOX.getRawButton(6))
                     {
                         _LEFT_SPARK.set(-1);
-                        _RIGHT_SPARK.set(1);
+                        _RIGHT_SPARK.set(-1);
                     }
                     else
                     {
                         _LEFT_SPARK.set(0);
                         _RIGHT_SPARK.set(0);
                     }
-                    if(IO.XBOX.getRawButton(1))
+                    if(IO.XBOX.getRawAxis(2) > 0.1)
                     {
-                        _PUSHER_MOTOR.set(0.5);
+                        _PUSHER_MOTOR.set(-1);
                     }
-                    else _PUSHER_MOTOR.set(0);
+                    else if(IO.XBOX.getRawAxis(3) > 0.1){
+                        _PUSHER_MOTOR.set(1);
+                    }
+                    else {
+                        _PUSHER_MOTOR.set(0);
+                    }
                     _AXIS_MOTOR.set(-IO.XBOX.getRawAxis(1));
                     break;
                 default:
